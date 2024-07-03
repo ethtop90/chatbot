@@ -14,6 +14,7 @@ import Testing from "./pages/profile/Testing";
 import NavBar from "./components/Navbar";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import Chatbot from "./pages/chatbot";
 
 const AppRoutes = () => {
   const auth = useSelector((state: any) => state.auth);
@@ -55,6 +56,7 @@ const AppRoutes = () => {
         />
 
         {/* Broken Link */}
+        <Route path="/chatbot" element={<Chatbot />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
