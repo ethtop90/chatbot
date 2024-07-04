@@ -18,10 +18,11 @@ jwt = JWTManager(app)
 CORS(app, resources={r"/auth/*": {"origins": "*"}})
 CORS(app, resources={r"/learningData/*": {"origins": "*"}})
 CORS(app, resources={r"/learningLogs/*": {"origins": "*"}})
-
+CORS(app, resources={r"/chatbot/*": {"origins": "*"}})
 
 from app.routes import *
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(learningData_bp)
 app.register_blueprint(learningLog_bp)
+app.register_blueprint(chatbot_bp)

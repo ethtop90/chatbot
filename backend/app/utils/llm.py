@@ -1,3 +1,4 @@
+import re
 import os
 import time
 from datetime import datetime
@@ -15,7 +16,7 @@ import csv
 import pandas as pd
 import docx
 from PyPDF2 import PdfFileReader
-from models.learningData import LearningData  # Assuming this is the correct import path for LearningData
+from app.models.learningData import LearningData  # Assuming this is the correct import path for LearningData
 
 load_dotenv(override=True)
 OPENAI__API__KEY = os.environ.get("OEPNAI_API_KEY")
@@ -79,6 +80,12 @@ def extract_text_from_html(file_path):
     html_transformer = Html2TextTransformer()
     return html_transformer.transform(html_content)
 
+def sanitize_chatbot_id(chatbot_id):
+    # Replace '@' with an underscore and remove any invalid characters
+    sanitized_id = re.sub(r'[^a-zA-Z0-9_-]', '_', chatbot_id)
+    # Ensure the collection name is between 3 and 63 characters
+    return sanitized_id[:63]
+
 def create_vector_db(chatbot_id):
     # Load necessary assets using LearningData model
     urls = LearningData.read_url_data(chatbot_id)
@@ -108,21 +115,25 @@ def create_vector_db(chatbot_id):
 
     converted_chunked_text = [''.join(str(item) for item in tup) for tup in chunked_text]
 
+    sanitized_chatbot_id = sanitize_chatbot_id(chatbot_id)
+
     # Generate embeddings for chunks using Chroma and OpenAI embeddings
     vectordb = Chroma.from_texts(
         converted_chunked_text,
         embedding=OpenAIEmbeddings(openai_api_key=OPENAI__API__KEY),
-        collection_name=f"openai_collection_{chatbot_id}",
+        collection_name=f"{sanitized_chatbot_id}",
         persist_directory="chroma_db"
     )
 
     return vectordb
 
 def create_rag_chain(chatbot_id):
+    sanitized_chatbot_id = sanitize_chatbot_id(chatbot_id)
+
     vectorstore = Chroma(
         persist_directory="./chroma_db",
         embedding_function=OpenAIEmbeddings(openai_api_key=OPENAI__API__KEY),
-        collection_name=f"openai_collection_{chatbot_id}"
+        collection_name=f"{sanitized_chatbot_id}"
     )
     
     retriever = vectorstore.as_retriever(search_kwargs={"k": 6})
@@ -217,7 +228,7 @@ def generate_follow_up_question(follow_up_chain, question, chat_history=[]):
     return follow_up_questions
 
 # Example usage:
-# chatbot_id = "example_chatbot_id"
+# chatbot_id = "fullsuccess.world@gmail.com"
 # vectordb = create_vector_db(chatbot_id)
 # rag_chain = create_rag_chain(chatbot_id)
 # follow_up_chain = create_follow_up_chain(rag_chain)

@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css"; // Import the custom styles
 import { FaPaperPlane } from "react-icons/fa";
-
+import { APIService } from "../../util/APIService";
 
 interface Message {
   type: "user" | "bot";
   content: string | string[];
   followUpQuestions?: string[];
+}
+
+interface Keyword {
+  id: string;
+  text: string;
 }
 
 const testData: Message[] = [
@@ -62,18 +67,41 @@ const Chatbot: React.FC = () => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(testData);
   const [input, setInput] = useState("");
+  const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [logs, setLogs] = useState<any[]>([]); // Define logs state
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
+    const token = localStorage.getItem("access_token");
+
     if (message.trim()) {
+      // Add user message to the chat
       setMessages((prevMessages) => [
         ...prevMessages,
         { type: "user", content: message },
+      ]);
+
+      // Send message to the backend
+      const response = await APIService.post(
+        "/chatbot/message",
+        JSON.stringify({ chatbotID: "your-chatbot-id", message }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+
+      // Add bot response to the chat
+      setMessages((prevMessages) => [
+        ...prevMessages,
         {
           type: "bot",
-          content: ["This is a response from the chatbot."],
-          followUpQuestions: ["Follow-up Question 1", "Follow-up Question 2"],
+          content: [data.response],
+          followUpQuestions: data.follow_up_questions,
         },
       ]);
+
       setInput("");
     }
   };
@@ -81,6 +109,23 @@ const Chatbot: React.FC = () => {
   const handleFollowUpClick = (question: string) => {
     handleSendMessage(question);
   };
+
+  useEffect(() => {
+    const fetchChatbotData = async () => {
+      const token = localStorage.getItem("access_token");
+
+      const response = await APIService.get("/chatbot/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setKeywords(data.keywords);
+      setLogs(data.logs);
+    };
+
+    fetchChatbotData();
+  }, []);
 
   return (
     <div className="font-noto-sans">
@@ -121,32 +166,18 @@ const Chatbot: React.FC = () => {
                 <span className="ml-2 text-white font-TimeBurner">PERVA</span>
               </div>
             </div>
+            {/* Keyword buttons */}
             <div className="flex items-center">
               <div className="box-border flex flex-row items-center justify-start  py-5 space-x-2  h-[80px] overflow-x-auto overflow-y-hidden no-scrollbar">
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 1
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 2
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 3
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 4
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 5
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 6
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 7
-                </button>
-                <button className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap">
-                  Quick Question 8
-                </button>
+                {keywords.map((keyword, index) => (
+                  <button
+                    key={index}
+                    className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap"
+                    onClick={() => handleSendMessage(keyword.text)}
+                  >
+                    {keyword.text}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -189,13 +220,7 @@ const Chatbot: React.FC = () => {
                       </svg>
                     </div>
                   )}
-                  <div
-                  // className={`max-w-md ${
-                  //   message.type === "user"
-                  //     ? "bg-blue-100 p-0"
-                  //     : "bg-white p-4"
-                  // }  rounded-lg shadow`}
-                  >
+                  <div>
                     {message.type === "bot" && (
                       <div className="text-[14px] font-bold ">
                         Chatbot Title
@@ -267,15 +292,15 @@ const Chatbot: React.FC = () => {
                   <path
                     d="M11.8182 15.1755L27.1666 6.49878L21.6911 25.9244L15.4742 23.313L11.4475 27.407L11.0263 21.0722L4.92737 19.0673L10.3693 16.001"
                     stroke="black"
-                    stroke-width="0.8"
-                    stroke-miterlimit="10"
+                    strokeWidth="0.8"
+                    strokeMiterlimit="10"
                   />
                   <path
                     d="M11.0262 21.0722L27.1666 6.49878L15.474 23.313"
                     stroke="black"
-                    stroke-width="0.8"
-                    stroke-miterlimit="10"
-                    stroke-linejoin="bevel"
+                    strokeWidth="0.8"
+                    strokeMiterlimit="10"
+                    strokeLinejoin="bevel"
                   />
                 </svg>
               </button>

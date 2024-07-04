@@ -181,3 +181,4 @@ package-lock.json
 
 # backend
 backend/.venv
+*.pyc
