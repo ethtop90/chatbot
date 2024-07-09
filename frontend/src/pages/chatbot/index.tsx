@@ -90,7 +90,7 @@ const Chatbot: React.FC = () => {
           },
         }
       );
-      const data = await response.json();
+      const data = await response.data;
 
       // Add bot response to the chat
       setMessages((prevMessages) => [
@@ -119,7 +119,7 @@ const Chatbot: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const data = await response.json();
+      const data = await response.data;
       setKeywords(data.keywords);
       setLogs(data.logs);
     };

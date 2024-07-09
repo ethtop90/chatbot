@@ -15,6 +15,7 @@ from langchain_community.document_transformers import LongContextReorder
 import csv
 import pandas as pd
 import docx
+from langchain.docstore.document import Document
 from PyPDF2 import PdfFileReader
 from app.models.learningData import LearningData  # Assuming this is the correct import path for LearningData
 
@@ -26,24 +27,31 @@ formatted_date = today.strftime("%Y%m%d")
 
 reordering = LongContextReorder()
 
+def create_doc(page_content, metadata):
+    doc =  Document(page_content=page_content, metadata=metadata)
+    return doc
+
 def load_file_contents(files):
     contents = []
     for file in files:
         file_path = file['path']
+        file_name = file['filename']
+        metadata = {"source": file_name}
+        
         extension = os.path.splitext(file_path)[1].lower()
         if extension == '.txt':
             with open(file_path, 'r', encoding='utf-8') as f:
-                contents.append(f.read())
+                contents.append(create_doc(f.read(), metadata))
         elif extension == '.pdf':
-            contents.append(extract_text_from_pdf(file_path))
+            contents.append(create_doc(extract_text_from_pdf(file_path), metadata))
         elif extension == '.csv':
-            contents.append(extract_text_from_csv(file_path))
+            contents.append(create_doc(extract_text_from_csv(file_path), metadata))
         elif extension in ['.xls', '.xlsx']:
-            contents.append(extract_text_from_excel(file_path))
+            contents.append(create_doc(extract_text_from_excel(file_path), metadata))
         elif extension == '.docx':
-            contents.append(extract_text_from_docx(file_path))
+            contents.append(create_doc(extract_text_from_docx(file_path), metadata))
         elif extension == '.html':
-            contents.append(extract_text_from_html(file_path))
+            contents.append(create_doc(extract_text_from_html(file_path), metadata))
     return contents
 
 def extract_text_from_pdf(file_path):
@@ -86,6 +94,13 @@ def sanitize_chatbot_id(chatbot_id):
     # Ensure the collection name is between 3 and 63 characters
     return sanitized_id[:63]
 
+def create_doc_from_hand_input(hand_inputs):
+    contents = []
+    for hand_input in hand_inputs:
+        contents.append(create_doc(hand_input['content'], {"title": hand_input['title']}))
+    return contents
+
+
 def create_vector_db(chatbot_id):
     # Load necessary assets using LearningData model
     urls = LearningData.read_url_data(chatbot_id)
@@ -107,7 +122,7 @@ def create_vector_db(chatbot_id):
     file_contents = load_file_contents(files)
 
     # Combine all text contents
-    combined_texts = docs_transformed + file_contents + [hi['content'] for hi in hand_inputs]
+    combined_texts = docs_transformed + file_contents + create_doc_from_hand_input(hand_inputs)
 
     # Split combined text into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
