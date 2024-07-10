@@ -57,7 +57,7 @@ const Signup = () => {
     <AuthLayout>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="flex justify-center align-middle mt-20 mx-auto w-20">
+          <div className="flex justify-center align-middle mt-5 mx-auto w-20">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"

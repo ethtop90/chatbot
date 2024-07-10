@@ -6,6 +6,7 @@ import Sidebar from "../components/general/sidebar";
 import { render } from "@headlessui/react/dist/utils/render";
 import Learning from "../components/PageComponents/Learning";
 import LearningLog from "../components/PageComponents/LearningLog";
+import UserManagement from "../components/PageComponents/UserManagement";
 interface dashboard {
   children?: any;
   current: number;
@@ -33,6 +34,8 @@ const DashboardLayout: React.FC<dashboard> = ({ children }: dashboard) => {
       //   return <LogChat />;
       // case 6:
       //   return <LogFeedback />;
+      case 7:
+        return <UserManagement />;
       default:
         return null;
     }

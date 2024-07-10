@@ -12,6 +12,7 @@ import NotFound from "./pages/Error/NotFound";
 import Users from "./pages/users";
 import Testing from "./pages/profile/Testing";
 import NavBar from "./components/Navbar";
+import UserManagement from "./components/PageComponents/UserManagement";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import Chatbot from "./pages/chatbot";
@@ -57,6 +58,7 @@ const AppRoutes = () => {
 
         {/* Broken Link */}
         <Route path="/chatbot" element={<Chatbot />} />
+        <Route path="/user" element={<UserManagement />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

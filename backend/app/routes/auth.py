@@ -41,6 +41,7 @@ def login():
         data['status'] = 'ok'
         data['userData'] = user
         data['access_token'] = access_token
+        data['isAdmin'] = user['isadmin']
         print(jsonify(data))
         return jsonify(data), 200
     return jsonify({'msg': 'Bad email or password'}), 401

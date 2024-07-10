@@ -15,6 +15,7 @@ export interface AuthState {
   userData: any;
   access_token: any;
   verifiedStatus: boolean;
+  isAdmin: boolean;
 }
 
 const initialState: AuthState = {
@@ -22,6 +23,7 @@ const initialState: AuthState = {
   userData: {},
   access_token: undefined,
   verifiedStatus: false,
+  isAdmin: false
 };
 
 export const authSlice = createSlice({
@@ -62,6 +64,7 @@ export const authSlice = createSlice({
         console.log(payload);
         state.userData = payload.userData;
         state.access_token = payload.access_token;
+        state.isAdmin = payload.isAdmin;
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.loading = false;
@@ -79,6 +82,7 @@ export const authSlice = createSlice({
       })
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
+        state.isAdmin = false;
       })
       .addCase(logoutUser.fulfilled, (state, { payload }) => {
         state.loading = false;

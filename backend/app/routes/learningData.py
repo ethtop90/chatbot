@@ -29,7 +29,7 @@ def create_url_data():
 
     try:
         LearningData.create_url_data(user_id, url, title, remarks)
-        create_vector_db_middleware(user_id)
+        # create_vector_db_middleware(user_id)
         return jsonify({'msg': 'URL data created successfully'}), 201
     except ValueError as e:
         return jsonify({'msg': str(e)}), 400
