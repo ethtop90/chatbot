@@ -89,4 +89,6 @@ def delete_user(id):
     return jsonify({'msg': 'User deleted successfully'}), 200
 
 def is_admin(email):
+    user = User.find_user(email)
+    
     return User.find_user(email)['isadmin']

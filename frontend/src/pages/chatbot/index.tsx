@@ -125,6 +125,8 @@ const Chatbot: React.FC = () => {
     };
 
     fetchChatbotData();
+
+    // setKeywords([{id: "1", text: "keyword1"},{id: "1", text: "keyword1"}])
   }, []);
 
   return (
