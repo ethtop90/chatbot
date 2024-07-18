@@ -182,6 +182,7 @@ package-lock.json
 # backend
 backend/.venv
 *.pyc
+backend/*/*.pyc
 
 #chroma
 chroma_db/
