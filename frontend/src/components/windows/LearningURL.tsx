@@ -96,7 +96,7 @@ const LearningURL: React.FC<LearningURLProps> = ({ items, setItems }) => {
                     onChange={(e) => handleInputChange(index, e)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2 h-24 text-sm"
                   />
-                </div>
+              </div>
               </div>
               <div className="flex align-middle pl-[19px] justify-center">
                 <button
