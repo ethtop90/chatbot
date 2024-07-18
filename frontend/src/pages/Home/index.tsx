@@ -3,7 +3,7 @@ import { PlusIcon } from "../../assets";
 
 const Home = () => {
   return (
-    <DashboardLayout>
+    <DashboardLayout current={0}>
       <div className="flex flex-col w-full bg-white py-11 ">
         <div className="flex items-center justify-between px-10 ">
           <p className="text-xl font-medium text-rpmary">List of admins</p>

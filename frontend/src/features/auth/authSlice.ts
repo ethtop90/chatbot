@@ -4,13 +4,11 @@ import { getSimplifiedError } from "../../util";
 import { APIService, altAPIService } from "../../util/APIService";
 import { baseUrl } from "../../util/endpoints";
 import { url } from "../../util/endpoints";
-import axios from "axios";
-import { isAuthenticated } from "../../components/general/sidebar";
-import { config } from "process";
 
 console.log(APIService);
 
 export interface AuthState {
+  token: any;
   loading: boolean;
   userData: any;
   access_token: any;
@@ -23,7 +21,8 @@ const initialState: AuthState = {
   userData: {},
   access_token: undefined,
   verifiedStatus: false,
-  isAdmin: false
+  isAdmin: false,
+  token: undefined
 };
 
 export const authSlice = createSlice({

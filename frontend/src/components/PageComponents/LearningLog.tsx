@@ -279,7 +279,7 @@ const LearningLog: React.FC = () => {
                 <input
                   type="text"
                   name="URL"
-                  value={urlLogData.url}
+                  value={urlLogData.URL}
                   onChange={handleUrlChange}
                   className="w-full p-2 mb-4 border rounded"
                 />
