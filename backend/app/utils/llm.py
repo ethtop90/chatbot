@@ -1,3 +1,4 @@
+import sys
 import re
 import os
 import time
@@ -18,6 +19,7 @@ import docx
 from langchain.docstore.document import Document
 from PyPDF2 import PdfFileReader
 from app.models.learningData import LearningData  # Assuming this is the correct import path for LearningData
+from app.models.user import User
 
 load_dotenv(override=True)
 OPENAI__API__KEY = os.environ.get("OEPNAI_API_KEY")
@@ -139,7 +141,7 @@ def create_vector_db(chatbot_id):
         collection_name=f"{sanitized_chatbot_id}",
         persist_directory="chroma_db"
     )
-
+    print('Size of vectorDB: {} bytes'.format(sys.getsizeof(vectordb)))
     return vectordb
 
 def create_rag_chain(chatbot_id):
@@ -205,7 +207,7 @@ def create_rag_chain(chatbot_id):
         | llm
         | StrOutputParser()
     )
-
+    print('Size of rag_chain: {} bytes'.format(sys.getsizeof(rag_chain)))
     return rag_chain
 
 def create_follow_up_chain(rag_chain):
@@ -231,7 +233,8 @@ def create_follow_up_chain(rag_chain):
     )
     
     follow_up_chain = follow_up_prompt_template | rag_chain | StrOutputParser()
-    
+    print('Size of follow_up_chain: {} bytes'.format(sys.getsizeof(follow_up_chain)))
+
     return follow_up_chain
 
 def generate_response(rag_chain, question, chat_history=[]):
@@ -249,3 +252,28 @@ def generate_follow_up_question(follow_up_chain, question, chat_history=[]):
 # follow_up_chain = create_follow_up_chain(rag_chain)
 # response_chunks = generate_response(rag_chain, "What is the weather like in Chiba?")
 # follow_up_questions = generate_follow_up_question(follow_up_chain, "Tell me more about Chiba.")
+
+def have_learning_data(chatbot_id):
+    urls = LearningData.read_url_data(chatbot_id)
+    files = LearningData.read_file_data(chatbot_id)
+    hand_inputs = LearningData.read_hand_input_data(chatbot_id)
+    return len(urls) + len(files) + len(hand_inputs)
+
+
+chatbot_set = {}
+
+def prepare_llm():
+    users = User.get_all_users()
+    for user in users:
+        email = user.get('email')
+        if have_learning_data(user.get('email')) == 0:
+            return
+        chatbot = {}
+        create_vector_db(email)
+        rag_chain = create_rag_chain(email)
+        follow_up_chain = create_follow_up_chain(rag_chain)
+        chatbot['rag_chain'] = rag_chain
+        chatbot['follow_up_chain'] = follow_up_chain
+        chatbot_set[email] = chatbot
+    print(chatbot_set)
+# prepare_llm()

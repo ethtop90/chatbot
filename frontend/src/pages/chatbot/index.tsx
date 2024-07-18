@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./style.css"; // Import the custom styles
-import { FaPaperPlane } from "react-icons/fa";
+import "./style.css"; // Import the custom styles;
 import { APIService } from "../../util/APIService";
 
 interface Message {
@@ -83,7 +82,7 @@ const Chatbot: React.FC = () => {
       // Send message to the backend
       const response = await APIService.post(
         "/chatbot/message",
-        JSON.stringify({ chatbotID: "your-chatbot-id", message }),
+        JSON.stringify({ chatbotID: "yasukehoru@gmail.com", message }),
         {
           headers: {
             "Content-Type": "application/json",
@@ -114,11 +113,14 @@ const Chatbot: React.FC = () => {
     const fetchChatbotData = async () => {
       const token = localStorage.getItem("access_token");
 
-      const response = await APIService.get("/chatbot/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await APIService.post("/chatbot/",
+        JSON.stringify({ chatbotID: "yasukehoru@gmail.com" }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }
+        });
       const data = await response.data;
       setKeywords(data.keywords);
       setLogs(data.logs);
@@ -188,11 +190,10 @@ const Chatbot: React.FC = () => {
               {messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`flex ${
-                    message.type === "user"
+                  className={`flex ${message.type === "user"
                       ? "justify-end"
                       : "items-start space-x-4"
-                  }`}
+                    }`}
                 >
                   {message.type === "bot" && (
                     <div className="p-3">
@@ -232,22 +233,20 @@ const Chatbot: React.FC = () => {
                       message.content.map((text, i) => (
                         <div
                           key={i}
-                          className={` text-[15px] ${
-                            message.type === "bot"
+                          className={` text-[15px] ${message.type === "bot"
                               ? "mt-2 bg-[#F2F2F2]"
                               : "bg-[#3B3B3B] text-white"
-                          } rounded-lg p-4`}
+                            } rounded-lg p-4`}
                         >
                           {text}
                         </div>
                       ))
                     ) : (
                       <div
-                        className={` text-[15px] ${
-                          message.type === "bot"
+                        className={` text-[15px] ${message.type === "bot"
                             ? "mt-2 bg-[#F2F2F2]"
                             : "bg-[#3B3B3B] text-white"
-                        } rounded-lg p-4`}
+                          } rounded-lg p-4`}
                       >
                         {message.content}
                       </div>
