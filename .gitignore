@@ -187,3 +187,6 @@ backend/*.pem
 
 #chroma
 chroma_db/
+
+#upload
+backend/uploads/*
