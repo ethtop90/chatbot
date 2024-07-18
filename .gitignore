@@ -186,3 +186,6 @@ backend/*/*.pyc
 
 #chroma
 chroma_db/
+
+#upload
+backend/uploads/*
