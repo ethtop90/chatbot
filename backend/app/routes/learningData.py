@@ -10,7 +10,7 @@ from app.utils.llm import create_vector_db  # Import the create_vector_db functi
 bp = Blueprint('learningData', __name__, url_prefix='/learningData')
 
 # Middleware to create vectorDB after operations
-def # create_vector_db_middleware(user_id):
+def create_vector_db_middleware(user_id):
     try:
         create_vector_db(user_id)
     except Exception as e:
