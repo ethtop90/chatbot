@@ -112,7 +112,7 @@ const LearningURL: React.FC<LearningURLProps> = ({ items, setItems }) => {
                     width="25px"
                     height="25px"
                     viewBox="0 0 363.025 363.024"
-                    xml:space="preserve"
+                    xmlSpace="preserve"
                   >
                     <g>
                       <g>

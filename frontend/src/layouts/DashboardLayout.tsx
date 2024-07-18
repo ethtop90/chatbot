@@ -9,7 +9,7 @@ import LearningLog from "../components/PageComponents/LearningLog";
 import UserManagement from "../components/PageComponents/UserManagement";
 interface dashboard {
   children?: any;
-  current: number;
+  current?: number;
 }
 
 const DashboardLayout: React.FC<dashboard> = ({ children }: dashboard) => {
