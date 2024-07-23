@@ -8,6 +8,17 @@ from app import db
 
 chatbot_bp = Blueprint('chatbot', __name__, url_prefix='/chatbot')
 
+def process_chat_history(user_chat_history):
+	processed_chat_history = []
+	for chat_entry in user_chat_history:
+		chat_entry.pop('_id', None)
+		chat_entry.pop('email', None)
+		chat_entry.pop('ip', None)
+		chat_entry.pop('message_type', None)
+		processed_chat_history.append(chat_entry)
+	return processed_chat_history
+
+
 @chatbot_bp.route('/', methods=['POST'])
 def greetings():
 	user_ip = request.remote_addr
@@ -20,7 +31,8 @@ def greetings():
 	お問い合わせ内容を選択ください。
 	"""
 	chatbot = chatbot_set.get(email)
-	user_chat_history = list(db.chat_history_collection.find({"email": email, "ip": user_ip})) or []
+	user_chat_history = process_chat_history(list(db.chat_history_collection.find({"email": email, "ip": user_ip})) or [])
+	
 	# keywords = generate_keyword(chatbot['keyword_chain'])
 	keywords = generate_keyword(chatbot['rag_chain'])
 	return jsonify({"greetings": greetings, "logs": user_chat_history, "keywords": keywords}),  200
@@ -30,7 +42,7 @@ def greetings():
 def add_message():
 	user_ip = request.remote_addr
 	data = request.get_json()
-	email = data['email']
+	email = data['chatbotID']
 	message_type = data['message_type']
 	message = data['content']
 
@@ -51,16 +63,17 @@ def respond_to_question():
 	if not data or 'question' not in data:
 		return jsonify({"error": "無効なリクエストです。質問を提供してください。"}), 400
 
-	email = data['email']
+	email = data['chatbotID']
 	chat_history = data['chat_history']
 	question = data['question']
 	question_type = data['question_type']
-
+	chatbot = chatbot_set.get(email)
+	rag_chain = chatbot['rag_chain']
 	if(question_type == "text"):
 		user = db.users.find_one({"email": email})
 
 		if user:
-			user_chat_history = list(db.chat_history_collection.find({"email": email}))
+			user_chat_history = process_chat_history(list(db.chat_history_collection.find({"email": email, "ip": user_ip})) or [])
 			chat_history = []
 			for chat in user_chat_history:
 				chat_history.append({
@@ -72,7 +85,7 @@ def respond_to_question():
 
 		def generate():
 			complete_response = []
-			for response in generate_response(question, chat_history):
+			for response in generate_response(rag_chain, question, chat_history):
 				complete_response.append(response)
 				yield response
 			
@@ -106,15 +119,18 @@ def get_suggest_question():
 	if not data or 'question' not in data:
 		return jsonify({"error": "無効なリクエストです。質問を提供してください。"}), 400
 
-	email = data['email']
+	email = data['chatbotID']
 	chat_history = data['chat_history']
 	question = data['question']
 	question_type = data['question_type']
 
+	chatbot = chatbot_set.get(email)
+	follow_up_chain = chatbot['follow_up_chain']
+
 	user = db.users.find_one({"email": email})
 
 	if user:
-		user_chat_history = list(db.chat_history_collection.find({"email": email}))
+		user_chat_history = process_chat_history(list(db.chat_history_collection.find({"email": email, "ip": user_ip})) or [])
 		chat_history = []
 		for chat in user_chat_history:
 			chat_history.append({
@@ -123,7 +139,7 @@ def get_suggest_question():
 				'content': chat['content']
 			})
 
-	follow_up_questions = generate_follow_up_question(question, chat_history)
+	follow_up_questions = generate_follow_up_question(follow_up_chain, question, chat_history)
 	return jsonify({'follow_up_questions': follow_up_questions}), 200
 
 @chatbot_bp.route('/get_chat_history', methods=['GET'])
@@ -131,7 +147,7 @@ def get_chat_history():
 	user_ip = request.remote_addr
     
 	email = request.args.get('email')
-	chat_history = list(db.chat_history_collection.find({'email': email})) 
+	chat_history = process_chat_history(list(db.chat_history_collection.find({"email": email, "ip": user_ip})) or []) 
 
 	formatted_chat_history = []
 	for chat in chat_history:

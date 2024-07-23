@@ -29,6 +29,9 @@ formatted_date = today.strftime("%Y%m%d")
 
 reordering = LongContextReorder()
 
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=OPENAI__API__KEY, temperature=0.3)
+
+
 def create_doc(page_content, metadata):
     doc =  Document(page_content=page_content, metadata=metadata)
     return doc
@@ -156,7 +159,7 @@ def create_rag_chain(chatbot_id):
     retriever = vectorstore.as_retriever(search_kwargs={"k": 6})
     reordering.transform_documents(retriever)
 
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=OPENAI__API__KEY, temperature=0.3)
+    # llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=OPENAI__API__KEY, temperature=0.3)
 
     contextualize_q_system_prompt = f"""
     今日の日付は{today.year}年{today.month}月{today.day}日です。
@@ -214,6 +217,8 @@ def create_follow_up_chain(rag_chain):
     follow_up_q_prompt = """
     ユーザーの質問に基づいて、千葉県に関連する適切なフォローアップ質問を2-4つ提案します。
     これらの質問を回答を提供せずに、ユーザーの興味に合わせてリスト形式で提示してください。重複や些細な質問を避けてください。
+    10文字程度を超えない一般的なフォローアップの質問であること。
+    1つの質問は10文字を超えてはならない。
     以下のフォーマットに従ってください:
     --- フォーマットテンプレート ---
     [
@@ -232,7 +237,7 @@ def create_follow_up_chain(rag_chain):
         ]
     )
     
-    follow_up_chain = follow_up_prompt_template | rag_chain | StrOutputParser()
+    follow_up_chain = follow_up_prompt_template | llm | StrOutputParser()
     print('Size of follow_up_chain: {} bytes'.format(sys.getsizeof(follow_up_chain)))
 
     return follow_up_chain
@@ -320,10 +325,7 @@ def prepare_llm():
         keyword_chain = create_keyword_chain(rag_chain)
         chatbot['rag_chain'] = rag_chain
         chatbot['follow_up_chain'] = follow_up_chain
-        # chatbot['keyword_chain'] = keyword_chain
         chatbot_set[email] = chatbot
-    # print(chatbot_set)
-# prepare_llm()
 
 def edit_llm(chatbot_id):
     if(chatbot_set.get(chatbot_id)):
@@ -334,6 +336,5 @@ def edit_llm(chatbot_id):
         keyword_chain = create_keyword_chain(rag_chain)
         chatbot['rag_chain'] = rag_chain
         chatbot['follow_up_chain'] = follow_up_chain
-        # chatbot['keyword_chain'] = keyword_chain
         chatbot_set[chatbot_id] = chatbot
 

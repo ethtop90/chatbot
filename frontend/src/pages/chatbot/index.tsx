@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef, Key } from 'react';
 import './style.css'; // Import the custom styles
 import { APIService } from '../../util/APIService';
+import { baseUrl } from "../../util/endpoints";
+
 
 interface Keyword {
   id: string;
@@ -26,6 +28,7 @@ const Chatbot: React.FC = () => {
     if (chatHistoryRef.current) {
       chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
     }
+    console.log(chatHistories);
   }, [chatHistories]);
 
   const handleSendMessage = async (messageContent: string, role: 'user' | 'ai') => {
@@ -40,24 +43,37 @@ const Chatbot: React.FC = () => {
     try {
       const token = localStorage.getItem('access_token');
 
-      const response = await APIService.post(
-        '/chatbot/respond_to_question',
-        JSON.stringify({
+      // const response = await APIService.post(
+      //   '/chatbot/respond_to_question',
+      //   JSON.stringify({
+      //     chatbotID: 'yasukehoru@gmail.com',
+      //     chat_history: chatHistories,
+      //     question,
+      //     question_type: 'text',
+      //   }),
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   },
+      // );
+
+      const response = await fetch(`${baseUrl}/chatbot/respond_to_question`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           chatbotID: 'yasukehoru@gmail.com',
           chat_history: chatHistories,
           question,
           question_type: 'text',
         }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
+      });
 
       if (response.status !== 200) throw new Error(`HTTP error status: ${response.status}`);
-
-      const reader = response.data?.getReader();
+      console.log(response);
+      const reader = response.body?.getReader();
       const decoder = new TextDecoder('utf-8');
 
       if (!reader) throw new Error('Response body is null');
@@ -70,9 +86,10 @@ const Chatbot: React.FC = () => {
         }
 
         const chunk = decoder.decode(value);
+        console.log(chunk);
         result += chunk;
         const chat: ChatMessage = { role: 'ai', content: result };
-
+        console.log(chat);
         setChatHistories((prevChatHistory) => {
           const updatedChatHistories = [...prevChatHistory];
           if (updatedChatHistories[updatedChatHistories.length - 1]?.role === 'ai') {
@@ -95,7 +112,6 @@ const Chatbot: React.FC = () => {
 
   const fetchSuggestQuestion = async (question: string) => {
     try {
-      const token = localStorage.getItem('access_token');
 
       const response = await APIService.post(
         '/chatbot/get_suggest_question',
@@ -119,7 +135,8 @@ const Chatbot: React.FC = () => {
       const result = response.data;
 
       if (result.follow_up_questions) {
-        setSuggestQuestions(result.follow_up_questions);
+        const suggestQuestionsArray: string[] = JSON.parse(result.follow_up_questions);
+        setSuggestQuestions(suggestQuestionsArray);
       } else {
         console.error('follow_up_questions field is missing in the response:', result);
       }
@@ -168,6 +185,12 @@ const Chatbot: React.FC = () => {
       }
       if (result.greetings) {
         setGreetings(result.greetings);
+      }
+
+      if(result.logs) {
+        const logsArray: ChatMessage[] = JSON.parse(result.logs);
+        
+        setChatHistories(logsArray);
       }
     } catch (error) {
       console.error('Error fetching initial data:', error);
@@ -224,7 +247,7 @@ const Chatbot: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <div className="text-[14px] font-bold ">PERVA</div>
+                 <div className="text-[14px] font-bold ">PERVA</div>
                 {greetings && (
 
                   <div
@@ -233,9 +256,10 @@ const Chatbot: React.FC = () => {
                     {greetings}
                   </div>
                 )}
+                {/*
                 {suggestQuestions && (
                   <div className="flex flex-row flex-wrap justify-start">
-                    {suggestQuestions.map((question: string, qIndex: Key) => (
+                    {suggestQuestions?.map((question: string, qIndex: Key) => (
                       <button
                         key={qIndex}
                         className="border border-black rounded-lg px-4 py-2 text-[15px] mr-2 mt-2"
@@ -245,8 +269,8 @@ const Chatbot: React.FC = () => {
                       </button>
                     ))}
                   </div>
-                )}
-              </div>
+                )}*/}
+              </div> 
             </div>
             {chatHistories.map((chat, index) => (
               <div key={index} className={`flex ${chat.role === 'user' ? 'justify-end' : 'items-start space-x-4'}`}>
@@ -280,7 +304,7 @@ const Chatbot: React.FC = () => {
                       {chat.content}
                     </div>
                   )}
-                  {suggestQuestions && (
+                  {chat.role === 'ai' && suggestQuestions && (
                     <div className="flex flex-row flex-wrap justify-start">
                       {suggestQuestions.map((question: string, qIndex: Key) => (
                         <button
