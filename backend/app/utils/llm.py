@@ -223,7 +223,7 @@ def create_follow_up_chain(rag_chain):
     "質問4"
     ]
     """
-    
+   
     follow_up_prompt_template = ChatPromptTemplate.from_messages(
         [
             ("system", follow_up_q_prompt),
@@ -237,6 +237,33 @@ def create_follow_up_chain(rag_chain):
 
     return follow_up_chain
 
+def create_keyword_chain(rag_chain):
+    keyword_q_prompt = """
+    あなたが学習した資料に基づいて5～10個のキーワードを生成してください。
+    重複したり、些細なキーワードは避けてください。
+    例："WEBサイト制作について", "代表取締役について", "キャンペーン実施中", "サービス料金を知る", "採用募集中！", "採用について", ...
+    以下のフォーマットに従ってください。
+    --- 形式テンプレート ---
+    [
+    "キーワード1",
+    "キーワード2",
+    "キーワード3",
+    "キーワード4"
+    ]
+    """
+   
+    keyword_prompt_template = ChatPromptTemplate.from_messages(
+        [
+            ("system", keyword_q_prompt),
+            ("human", "{user_input}"),
+        ]
+    )
+   
+    keyword_chain = keyword_prompt_template | rag_chain | StrOutputParser()
+    print('Size of keyword_chain: {} bytes'.format(sys.getsizeof(keyword_chain)))
+
+    return keyword_chain
+
 def generate_response(rag_chain, question, chat_history=[]):
     for chunk in rag_chain.stream({'question': question, 'chat_history': chat_history}):
         yield chunk
@@ -244,6 +271,24 @@ def generate_response(rag_chain, question, chat_history=[]):
 def generate_follow_up_question(follow_up_chain, question, chat_history=[]):
     follow_up_questions = follow_up_chain.invoke({'question': question, 'chat_history': chat_history})
     return follow_up_questions
+
+# def generate_keyword(keyword_chain, user_input="学習した資料に基づき、キーワードはリスト形式で提示してください。キーワードは、元の質問で言及されたトピックに関連するもので、重複や些細なキーワードは避けてください。 回答は日本語でお願いします。"):
+#     keywords = keyword_chain.invoke({'user_input': user_input})
+#     return keywords
+
+def generate_keyword(rag_chain, user_input="""あなたが学習した資料に基づいて5～10個のキーワードを生成してください。
+重複したり、些細なキーワードは避けてください。
+例："WEBサイト制作について", "代表取締役について", "キャンペーン実施中", "サービス料金を知る", "採用募集中！", "採用について", ...
+以下のフォーマットに従ってください。
+--- 形式テンプレート ---
+[
+"キーワード1",
+"キーワード2",
+"キーワード3",
+"キーワード4"
+]""", chat_history=[]):
+    keywords = rag_chain.invoke({'question': user_input, 'chat_history': chat_history})
+    return keywords
 
 # Example usage:
 # chatbot_id = "fullsuccess.world@gmail.com"
@@ -272,8 +317,23 @@ def prepare_llm():
         create_vector_db(email)
         rag_chain = create_rag_chain(email)
         follow_up_chain = create_follow_up_chain(rag_chain)
+        keyword_chain = create_keyword_chain(rag_chain)
         chatbot['rag_chain'] = rag_chain
         chatbot['follow_up_chain'] = follow_up_chain
+        # chatbot['keyword_chain'] = keyword_chain
         chatbot_set[email] = chatbot
-    print(chatbot_set)
+    # print(chatbot_set)
 # prepare_llm()
+
+def edit_llm(chatbot_id):
+    if(chatbot_set.get(chatbot_id)):
+        create_vector_db(chatbot_id)
+        chatbot = {}
+        rag_chain = create_rag_chain(chatbot_id)
+        follow_up_chain = create_follow_up_chain(rag_chain)
+        keyword_chain = create_keyword_chain(rag_chain)
+        chatbot['rag_chain'] = rag_chain
+        chatbot['follow_up_chain'] = follow_up_chain
+        # chatbot['keyword_chain'] = keyword_chain
+        chatbot_set[chatbot_id] = chatbot
+
