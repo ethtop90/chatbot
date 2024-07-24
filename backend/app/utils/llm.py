@@ -22,6 +22,7 @@ from app.models.learningData import LearningData  # Assuming this is the correct
 from app.models.user import User
 
 load_dotenv(override=True)
+OPENAI__API__KEY = os.environ.get("OEPNAI_API_KEY")
 
 today = datetime.now()
 formatted_date = today.strftime("%Y%m%d")
