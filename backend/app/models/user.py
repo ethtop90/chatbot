@@ -72,7 +72,7 @@ class User:
 
     @staticmethod
     def get_all_users():
-        return list(db.users.find())
+        return list(db.users.find()) or []
 
     @staticmethod
     def verify_password(stored_password, provided_password):
