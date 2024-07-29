@@ -5,10 +5,11 @@ import os
 
 if __name__ == '__main__':
     mode = os.environ.get("project_mode")
+    port = os.environ.get("port")
     
     prepare_llm()
     if mode == "develop":
-        app.run(host='0.0.0.0', port=8080, debug=True)
+        app.run(host='0.0.0.0', port=port, debug=True)
     elif mode == "production":
         app.run(host='0.0.0.0', port=443, ssl_context=('cert.pem', 'key.pem'))
 
