@@ -92,3 +92,9 @@ def is_admin(email):
     user = User.find_user(email)
     
     return User.find_user(email)['isadmin']
+
+@user_bp.route('/generateCode', methods=['POST'])
+@jwt_required()
+def generate_code():
+    email = get_jwt_identity()
+    

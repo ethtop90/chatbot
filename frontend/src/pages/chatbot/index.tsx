@@ -187,9 +187,9 @@ const Chatbot: React.FC = () => {
         setGreetings(result.greetings);
       }
 
-      if(result.logs) {
+      if (result.logs) {
         const logsArray: ChatMessage[] = JSON.parse(result.logs);
-        
+
         setChatHistories(logsArray);
       }
     } catch (error) {
@@ -225,7 +225,7 @@ const Chatbot: React.FC = () => {
               {keywords?.map((keyword, index) => (
                 <button
                   key={index}
-                  className="px-4 py-2 border border-[#D3D3D3] w-[177px] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap"
+                  className="px-4 py-2 border border-[#D3D3D3] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap"
                 // onClick={() => handleSubmit(keyword.text)}
                 >
                   {keyword}
@@ -247,7 +247,7 @@ const Chatbot: React.FC = () => {
                 </svg>
               </div>
               <div>
-                 <div className="text-[14px] font-bold ">PERVA</div>
+                <div className="text-[14px] font-bold ">PERVA</div>
                 {greetings && (
 
                   <div
@@ -270,7 +270,7 @@ const Chatbot: React.FC = () => {
                     ))}
                   </div>
                 )}*/}
-              </div> 
+              </div>
             </div>
             {chatHistories.map((chat, index) => (
               <div key={index} className={`flex ${chat.role === 'user' ? 'justify-end' : 'items-start space-x-4'}`}>
@@ -319,7 +319,97 @@ const Chatbot: React.FC = () => {
                   )}
                 </div>
               </div>
+
             ))}
+            {isLoading ? (
+              <div className="flex flex-row justify-start">
+                <div className="messages text-sm text-gray-700 grid grid-flow-row gap-2">
+                  <div className="flex items-center group">
+                    <p className="px-6 py-3 rounded-b-[15px] rounded-r-[15px] bg-gray-100 max-w-xs lg:max-w-md">
+                      <div aria-label="Loading..." role="status" className="flex items-center space-x-2">
+                        <svg className="h-[24px] w-[24px] animate-spin stroke-gray-500" viewBox="0 0 256 256">
+                          <line
+                            x1="128"
+                            y1="32"
+                            x2="128"
+                            y2="64"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="195.9"
+                            y1="60.1"
+                            x2="173.3"
+                            y2="82.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="224"
+                            y1="128"
+                            x2="192"
+                            y2="128"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="195.9"
+                            y1="195.9"
+                            x2="173.3"
+                            y2="173.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="128"
+                            y1="224"
+                            x2="128"
+                            y2="192"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="60.1"
+                            y1="195.9"
+                            x2="82.7"
+                            y2="173.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="32"
+                            y1="128"
+                            x2="64"
+                            y2="128"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                          <line
+                            x1="60.1"
+                            y1="60.1"
+                            x2="82.7"
+                            y2="82.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="24"
+                          ></line>
+                        </svg>
+                        <span className="text-md font-medium text-gray-500">応答生成中</span>
+                      </div>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
 
           {/* Message Input */}
@@ -331,6 +421,11 @@ const Chatbot: React.FC = () => {
                 placeholder="質問を入力してください。"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(e);
+                  }
+                }}
                 required
                 disabled={isLoading}
               />
