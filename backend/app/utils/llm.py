@@ -324,6 +324,7 @@ def prepare_llm():
         follow_up_chain = create_follow_up_chain(rag_chain)
         keyword_chain = create_keyword_chain(rag_chain)
         chatbot['rag_chain'] = rag_chain
+        print("chatbot['rag_chain']", chatbot['rag_chain'])
         chatbot['follow_up_chain'] = follow_up_chain
         chatbot_set[email] = chatbot
 
