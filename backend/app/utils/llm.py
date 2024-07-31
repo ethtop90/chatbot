@@ -321,7 +321,7 @@ def prepare_llm():
     for user in users:
         email = user.get('email')
         if have_learning_data(user.get('email')) == 0:
-            return
+            continue
         chatbot = {}
         create_vector_db(email)
         rag_chain = create_rag_chain(email)
