@@ -97,4 +97,7 @@ def is_admin(email):
 @jwt_required()
 def generate_code():
     email = get_jwt_identity()
+    code = User.generate_code(email)
+    return jsonify({'code': code}), 200
+
     

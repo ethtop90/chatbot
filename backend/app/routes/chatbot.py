@@ -5,6 +5,7 @@ from app.models.chatbot import ChatbotKeyword, ChatbotLog
 from app.utils.llm import *
 import traceback
 from app import db
+from app.models.user import *
 
 chatbot_bp = Blueprint('chatbot', __name__, url_prefix='/chatbot')
 
@@ -23,7 +24,8 @@ def process_chat_history(user_chat_history):
 def greetings():
 	user_ip = request.remote_addr
 	data = request.get_json()
-	email = data['chatbotID']
+	encrypted_email = data['chatbotID']
+	email = decrypt_email(encrypted_email)
 	user = db.users.find_one({'email': email})
 	company_name = user.get('username')
 	greetings = f"""
@@ -42,7 +44,8 @@ def greetings():
 def add_message():
 	user_ip = request.remote_addr
 	data = request.get_json()
-	email = data['chatbotID']
+	encrypted_email = data['chatbotID']
+	email = decrypt_email(encrypted_email)
 	message_type = data['message_type']
 	message = data['content']
 
@@ -63,7 +66,8 @@ def respond_to_question():
 	if not data or 'question' not in data:
 		return jsonify({"error": "無効なリクエストです。質問を提供してください。"}), 400
 
-	email = data['chatbotID']
+	encrypted_email = data['chatbotID']
+	email = decrypt_email(encrypted_email)
 	chat_history = data['chat_history']
 	question = data['question']
 	question_type = data['question_type']
@@ -119,7 +123,8 @@ def get_suggest_question():
 	if not data or 'question' not in data:
 		return jsonify({"error": "無効なリクエストです。質問を提供してください。"}), 400
 
-	email = data['chatbotID']
+	encrypted_email = data['chatbotID']
+	email = decrypt_email(encrypted_email)
 	chat_history = data['chat_history']
 	question = data['question']
 	question_type = data['question_type']

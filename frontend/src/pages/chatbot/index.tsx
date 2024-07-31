@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, Key } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './style.css'; // Import the custom styles
 import { APIService } from '../../util/APIService';
 import { baseUrl } from "../../util/endpoints";
@@ -15,6 +16,8 @@ interface ChatMessage {
 }
 
 const Chatbot: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const chatbotID = searchParams.get('id');
   const chatHistoryRef = useRef<HTMLDivElement>(null);
   const [keywords, setKeywords] = useState<String[]>([]);
   const [chatHistories, setChatHistories] = useState<ChatMessage[]>([]);
@@ -46,7 +49,7 @@ const Chatbot: React.FC = () => {
       // const response = await APIService.post(
       //   '/chatbot/respond_to_question',
       //   JSON.stringify({
-      //     chatbotID: 'yasukehoru@gmail.com',
+      //     chatbotID: chatbotID,
       //     chat_history: chatHistories,
       //     question,
       //     question_type: 'text',
@@ -64,7 +67,7 @@ const Chatbot: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          chatbotID: 'yasukehoru@gmail.com',
+          chatbotID: chatbotID,
           chat_history: chatHistories,
           question,
           question_type: 'text',
@@ -116,7 +119,7 @@ const Chatbot: React.FC = () => {
       const response = await APIService.post(
         '/chatbot/get_suggest_question',
         JSON.stringify({
-          chatbotID: 'yasukehoru@gmail.com',
+          chatbotID: chatbotID,
           chat_history: chatHistories,
           question,
           question_type: 'text',
@@ -164,7 +167,7 @@ const Chatbot: React.FC = () => {
       const response = await APIService.post(
         '/chatbot/',
         JSON.stringify({
-          chatbotID: 'yasukehoru@gmail.com',
+          chatbotID: chatbotID,
         }),
         {
           headers: {
@@ -199,6 +202,7 @@ const Chatbot: React.FC = () => {
 
   useEffect(() => {
     fetchInitialData();
+    console.log(chatbotID);
   }, []);
 
   return (
