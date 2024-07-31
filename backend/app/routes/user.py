@@ -11,6 +11,7 @@ user_bp = Blueprint('user', __name__, url_prefix='/users')
 @user_bp.route('/', methods=['GET'])
 @jwt_required()
 def get_users():
+    
     email = get_jwt_identity()
     if is_admin(email) is False:
         return jsonify({'msg': 'Access was not permitted.'}), 404
@@ -96,7 +97,9 @@ def is_admin(email):
 @user_bp.route('/generateCode', methods=['POST'])
 @jwt_required()
 def generate_code():
-    email = get_jwt_identity()
+    data = request.get_json()
+    email = data.get('email')
+
     code = User.generate_code(email)
     return jsonify({'code': code}), 200
 
