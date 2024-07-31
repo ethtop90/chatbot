@@ -36,6 +36,7 @@ def greetings():
 	user_chat_history = process_chat_history(list(db.chat_history_collection.find({"email": email, "ip": user_ip})) or [])
 	
 	# keywords = generate_keyword(chatbot['keyword_chain'])
+	print("decrypted_email:", email)
 	keywords = generate_keyword(chatbot['rag_chain'])
 	return jsonify({"greetings": greetings, "logs": user_chat_history, "keywords": keywords}),  200
 	
