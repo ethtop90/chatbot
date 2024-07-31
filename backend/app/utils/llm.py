@@ -307,6 +307,7 @@ def have_learning_data(chatbot_id):
     urls = LearningData.read_url_data(chatbot_id)
     files = LearningData.read_file_data(chatbot_id)
     hand_inputs = LearningData.read_hand_input_data(chatbot_id)
+    print(f"number of resources of {chatbot_id}:", len(urls) + len(files) + len(hand_inputs))
     return len(urls) + len(files) + len(hand_inputs)
 
 

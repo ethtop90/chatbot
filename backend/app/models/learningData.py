@@ -25,7 +25,7 @@ class LearningData:
 
     @staticmethod
     def read_url_data(user_id):
-        return list(db.urldata.find({'userID': user_id}))
+        return list(db.urldata.find({'userID': user_id})) or []
 
     @staticmethod
     def update_url_data(url_data_id, new_data):
@@ -51,7 +51,7 @@ class LearningData:
 
     @staticmethod
     def read_file_data(user_id):
-        return list(db.filedata.find({'userID': user_id}))
+        return list(db.filedata.find({'userID': user_id})) or []
 
     # @staticmethod
     # def update_file_data(file_data_id, new_filename):
@@ -95,7 +95,7 @@ class LearningData:
 
     @staticmethod
     def read_hand_input_data(user_id):
-        return list(db.handinputdata.find({'userID': user_id}))
+        return list(db.handinputdata.find({'userID': user_id})) or []
 
     @staticmethod
     def update_hand_input_data(hand_input_data_id, new_data):
