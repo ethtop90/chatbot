@@ -313,7 +313,10 @@ def have_learning_data(chatbot_id):
 chatbot_set = {}
 
 def prepare_llm():
+    print("start prepare_llm")
     users = User.get_all_users()
+    print("users:", users)
+
     for user in users:
         email = user.get('email')
         if have_learning_data(user.get('email')) == 0:
