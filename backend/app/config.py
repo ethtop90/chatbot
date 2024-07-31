@@ -1,7 +1,7 @@
 import os
 
 # MONGO_URI = 'mongodb://localhost:27017/'
-MONGO_URI = 'mongodb://admin:perva@localhost:27017/'  
+MONGO_URI = 'mongodb://admin:perva@localhost:27017/PERVA_chatbot'  
 
 MONGO_DBNAME = 'PERVA_chatbot'
 
