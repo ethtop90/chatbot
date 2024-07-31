@@ -132,11 +132,13 @@ class User:
             // Create the iframe
             var chatbotIframe = document.createElement('iframe');
             chatbotIframe.id = 'chatbotIframe';
-            chatbotIframe.src = 'http://62.3.6.9:5173/chatbot?id={encrypted_email}';
+            chatbotIframe.src = 'http://162.43.27.183:8080/chatbot?id={encrypted_email}';
+            chatbotIframe.style.zIndex = '100';
             chatbotIframe.style.display = 'flex';
             chatbotIframe.style.justifyContent = 'center';
             chatbotIframe.style.alignItems = 'center';
             chatbotIframe.style.position = 'fixed';
+            chatbotIframe.style.top = '0px';  // Adjusted for better placement relative to the button
             chatbotIframe.style.right = '21px';
             chatbotIframe.style.width = '355px';
             chatbotIframe.style.height = '596px';
