@@ -5,9 +5,9 @@ export const getSimplifiedError = (error: object | any) => {
   console.log('error');
   if (!error.response) {
     toast.error(
-      "Something went wrong, check your internet and please try again"
+      "インターネットをチェックして、もう一度お試しください。"
     );
-    return "Something went wrong, check your internet and please try again";
+    return "インターネットをチェックして、もう一度お試しください。";
   }
   const errorObject = error?.response?.data;
   if (error.response?.status === 500) {

@@ -31,22 +31,9 @@ const AppRoutes = () => {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route
           path="/"
-          // element={auth?.userData?.username ? <Home key={'home'}/> : <Login key={'login'}/>}
-          element={<Home />}
+          element={auth?.userData?.username ? <Home key={'home'}/> : <Login key={'login'}/>}
+          // element={<Home />}
         />
-        {/* <Route path="/transactions" element={<Transactions />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/testing" element={<Testing />} /> */}
-
-        {/* Protected Routes */}
-        {/* <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        /> */}
         <Route
           path="/profile"
           element={
