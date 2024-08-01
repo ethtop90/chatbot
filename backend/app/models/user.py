@@ -132,7 +132,7 @@ class User:
             // Create the iframe
             var chatbotIframe = document.createElement('iframe');
             chatbotIframe.id = 'chatbotIframe';
-            chatbotIframe.src = 'http://162.43.27.183:8080/chatbot?id={encrypted_email}';
+            chatbotIframe.src = 'https://162.43.27.183/chatbot?id={encrypted_email}';
             chatbotIframe.style.zIndex = '100';
             chatbotIframe.style.display = 'flex';
             chatbotIframe.style.justifyContent = 'center';

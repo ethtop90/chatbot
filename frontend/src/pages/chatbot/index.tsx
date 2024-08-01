@@ -207,8 +207,8 @@ const Chatbot: React.FC = () => {
 
   return (
     <div className="font-noto-sans">
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 sm:px-[10px] lg:px-[100px]">
-        <div className="bg-white w-full h-full md:h-auto md:max-h-[90vh] flex flex-col rounded-lg overflow-hidden shadow-lg">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 sm:px-[10px] lg:pt-[48px] lg:px-[100px] lg:pb-[123px]">
+        <div className="bg-white w-full h-full flex flex-col rounded-lg overflow-hidden shadow-lg">
           {/* Header */}
           <div className="bg-[#2D2D2D] h-[71px] flex items-center p-6">
             <div className="flex items-center">
