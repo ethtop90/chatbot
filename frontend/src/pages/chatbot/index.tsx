@@ -156,6 +156,13 @@ const Chatbot: React.FC = () => {
     setUserInput('');
   };
 
+  const handleKeywordClick = async (keywordText: string) => {
+    await handleSendMessage(keywordText, 'user');
+    await fetchChatResponse(keywordText);
+    await fetchSuggestQuestion(keywordText);
+    setUserInput('');
+  };
+
   const handleClickFollowQuestion = async (selectedQuestion: string) => {
     await handleSendMessage(selectedQuestion, 'user');
     await fetchChatResponse(selectedQuestion);
@@ -226,13 +233,13 @@ const Chatbot: React.FC = () => {
           {/* Keyword buttons */}
           <div className="flex items-center">
             <div className="box-border flex flex-row items-center justify-start py-5 space-x-2 h-[80px] overflow-x-auto overflow-y-hidden no-scrollbar">
-              {keywords?.map((keyword, index) => (
+              {keywords?.map((value, index) => (
                 <button
                   key={index}
-                  className="px-4 py-2 border border-[#D3D3D3] h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap"
-                // onClick={() => handleSubmit(keyword.text)}
+                  className="px-4 py-2 border border-black h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap"
+                onClick={() => handleKeywordClick(value)}
                 >
-                  {keyword}
+                  {value}
                 </button>
               ))}
             </div>
