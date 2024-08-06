@@ -19,7 +19,7 @@ const Chatbot: React.FC = () => {
   const [searchParams] = useSearchParams();
   const chatbotID = searchParams.get('id');
   const chatHistoryRef = useRef<HTMLDivElement>(null);
-  const [keywords, setKeywords] = useState<String[]>([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
   const [chatHistories, setChatHistories] = useState<ChatMessage[]>([]);
 
   const [userInput, setUserInput] = useState('');
@@ -233,7 +233,7 @@ const Chatbot: React.FC = () => {
           {/* Keyword buttons */}
           <div className="flex items-center">
             <div className="box-border flex flex-row items-center justify-start py-5 space-x-2 h-[80px] overflow-x-auto overflow-y-hidden no-scrollbar">
-              {keywords?.map((value, index) => (
+              {keywords?.map((value: string, index: number) => (
                 <button
                   key={index}
                   className="px-4 py-2 border border-black h-[40px] text-[#8E8E8E] text-[15px] rounded-[6px] whitespace-nowrap"
