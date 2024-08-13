@@ -433,7 +433,7 @@ const Chatbot: React.FC = () => {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === 'Enter' && e.ctrlKey) {
                     handleSubmit(e);
                   }
                 }}

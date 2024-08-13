@@ -182,7 +182,7 @@ class User:
             // Create the iframe
             var chatbotIframe = document.createElement('iframe');
             chatbotIframe.id = 'chatbotIframe';
-            chatbotIframe.src = 'https://162.43.27.183/chatbot?id={encrypted_email}';
+            chatbotIframe.src = 'https://perva-bot.com/chatbot?id={encrypted_email}';
             var chatbotCloseButton = document.createElement('button');
             chatbotCloseButton.id = 'chatbotCloseButton';
             chatbotCloseButton.innerHTML = `<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
