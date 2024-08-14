@@ -16,7 +16,7 @@ import UserManagement from "./components/PageComponents/UserManagement";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import Chatbot from "./pages/chatbot";
-import ChatLog from "./components/PageComponents/Chatlog";
+import ChatLog from "./components/PageComponents/ChatLog";
 
 const AppRoutes = () => {
   const auth = useSelector((state: any) => state.auth);

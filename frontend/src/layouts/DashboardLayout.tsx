@@ -7,7 +7,7 @@ import { render } from "@headlessui/react/dist/utils/render";
 import Learning from "../components/PageComponents/Learning";
 import LearningLog from "../components/PageComponents/LearningLog";
 import UserManagement from "../components/PageComponents/UserManagement";
-import ChatLog from "../components/PageComponents/Chatlog";
+import ChatLog from "../components/PageComponents/ChatLog";
 interface dashboard {
   children?: any;
   current?: number;
