@@ -46,21 +46,6 @@ const Chatbot: React.FC = () => {
     try {
       const token = localStorage.getItem('access_token');
 
-      // const response = await APIService.post(
-      //   '/chatbot/respond_to_question',
-      //   JSON.stringify({
-      //     chatbotID: chatbotID,
-      //     chat_history: chatHistories,
-      //     question,
-      //     question_type: 'text',
-      //   }),
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   },
-      // );
-
       const response = await fetch(`${baseUrl}/chatbot/respond_to_question`, {
         method: 'POST',
         headers: {
@@ -426,19 +411,23 @@ const Chatbot: React.FC = () => {
           {/* Message Input */}
           <div className="flex items-center p-6 border-t-[2px] sm:p-2 md:px-10 md:py-6">
             <label className="w-full">
-              <input
-                className="w-full p-2 rounded-lg bg-[#F2F2F2]"
-                type="text"
+              <textarea
+                className="w-full p-2 rounded-lg bg-[#F2F2F2] resize-none"
+                // type="text"
+                
                 placeholder="質問を入力してください。"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && e.ctrlKey) {
+                  if (e.key === 'Enter' && !e.ctrlKey) { // Check for Enter key, but allow Ctrl + Enter for submission
+                    // e.preventDefault(); // Prevent the default behavior of adding a new line
+                  } else if (e.key === 'Enter' && e.ctrlKey) {
                     handleSubmit(e);
                   }
                 }}
                 required
                 disabled={isLoading}
+                rows={1}
               />
             </label>
             <button type="submit" className="sm:pl-1 md:pl-4" disabled={isLoading} onClick={handleSubmit}>

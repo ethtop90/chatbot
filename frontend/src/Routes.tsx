@@ -16,6 +16,7 @@ import UserManagement from "./components/PageComponents/UserManagement";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import Chatbot from "./pages/chatbot";
+import ChatLog from "./components/PageComponents/Chatlog";
 
 const AppRoutes = () => {
   const auth = useSelector((state: any) => state.auth);
@@ -45,6 +46,7 @@ const AppRoutes = () => {
 
         {/* Broken Link */}
         <Route path="/chatbot" element={<Chatbot />} />
+        <Route path="/chatLog" element={<ChatLog />} />
         <Route path="/user" element={<UserManagement />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

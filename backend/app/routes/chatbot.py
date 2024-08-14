@@ -40,7 +40,6 @@ def greetings():
 	keywords = generate_keyword(chatbot['rag_chain'])
 	return jsonify({"greetings": greetings, "logs": user_chat_history, "keywords": keywords}),  200
 	
-
 @chatbot_bp.route('/add_message', methods=['POST'])
 def add_message():
 	user_ip = request.remote_addr
@@ -113,7 +112,14 @@ def respond_to_question():
 
 			db.chat_history_collection.insert_one(new_message_user)
 			db.chat_history_collection.insert_one(new_message_ai)
-			
+
+			chat_log = {
+				'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+				'user_email': email,
+				'question': question,
+				'answer': full_response,
+			}
+			db.chatlog.insert_one(chat_log);
 		
 		return generate(), {"Content-Type": "text/plain"}
 

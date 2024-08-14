@@ -7,6 +7,7 @@ import { render } from "@headlessui/react/dist/utils/render";
 import Learning from "../components/PageComponents/Learning";
 import LearningLog from "../components/PageComponents/LearningLog";
 import UserManagement from "../components/PageComponents/UserManagement";
+import ChatLog from "../components/PageComponents/Chatlog";
 interface dashboard {
   children?: any;
   current?: number;
@@ -20,6 +21,11 @@ const DashboardLayout: React.FC<dashboard> = ({ children }: dashboard) => {
     setComponentId(id);
   };
 
+  useEffect(() => {
+    console.log(componentId);
+
+  }, [componentId])
+
   const renderComponent = () => {
     switch (componentId) {
       case 1:
@@ -30,8 +36,8 @@ const DashboardLayout: React.FC<dashboard> = ({ children }: dashboard) => {
       //   return <LogManagement />;
       case 4:
         return <LearningLog />;
-      // case 5:
-      //   return <LogChat />;
+      case 5:
+        return <ChatLog />;
       // case 6:
       //   return <LogFeedback />;
       case 7:

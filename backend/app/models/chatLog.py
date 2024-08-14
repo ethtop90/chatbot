@@ -1,64 +1,45 @@
 # backend/app/models/chatLog.py
-
 from bson import ObjectId
 from app import db
 
 class ChatLog:
-    
+
     @staticmethod
-    def create_log(chatbot_id, question, response):
-        """
-        Create a new chat log entry.
-        :param chatbot_id: ID of the chatbot
-        :param question: User's question
-        :param response: Bot's response
-        """
-        log_entry = {
-            'chatbotID': chatbot_id,
-            'log': {
-                'question': question,
-                'response': response
+    def create_chat_log(date, user_email, question, answer):
+        db.chatlog.insert_one({
+            # 'type': log_type,
+            'date': date,
+            'user_email': user_email,
+            'question': question,
+            'answer': answer,
+            # 'score': score
+        })
+
+    @staticmethod
+    def read_chat_logs(user_email):
+        logs = db.chatlog.find({'user_email': user_email})
+        processed_logs = []
+        for log in logs:
+            processed_log = {
+                '_id': str(log['_id']),  # Convert ObjectId to string
+                'date': log['date'],
+                'user_email': log['user_email'],
+                'question': log['question'],
+                'answer': log['answer'],
+                # Add other fields if present
             }
-        }
-        db.chatlogs.insert_one(log_entry)
-        return log_entry
+            processed_logs.append(processed_log)
+        return processed_logs or []
 
     @staticmethod
-    def read_logs(chatbot_id):
-        """
-        Read all chat logs for a specific chatbot ID.
-        :param chatbot_id: ID of the chatbot
-        :return: List of chat logs
-        """
-        return list(db.chatlogs.find({'chatbotID': chatbot_id}))
+    def update_chat_log(log_id, new_data):
+        db.chatlog.update_one({'_id': ObjectId(log_id)}, {'$set': new_data})
 
     @staticmethod
-    def update_log(log_id, question=None, response=None):
-        """
-        Update an existing chat log entry.
-        :param log_id: ID of the log entry to update
-        :param question: (Optional) Updated question
-        :param response: (Optional) Updated response
-        """
-        update_fields = {}
-        if question:
-            update_fields['log.question'] = question
-        if response:
-            update_fields['log.response'] = response
-        db.chatlogs.update_one({'_id': ObjectId(log_id)}, {'$set': update_fields})
+    def delete_chat_log(log_id):
+        return db.chatlog.delete_one({'_id': ObjectId(log_id)})
 
     @staticmethod
-    def delete_log(log_id):
-        """
-        Delete a chat log entry.
-        :param log_id: ID of the log entry to delete
-        """
-        db.chatlogs.delete_one({'_id': ObjectId(log_id)})
-
-    @staticmethod
-    def delete_logs_by_chatbot(chatbot_id):
-        """
-        Delete all chat log entries for a specific chatbot ID.
-        :param chatbot_id: ID of the chatbot
-        """
-        db.chatlogs.delete_many({'chatbotID': chatbot_id})
+    def delete_all_chat_logs_by_user_email(user_email):
+        result = db.chatlog.delete_many({'user_email': user_email})
+        return result.deleted_count

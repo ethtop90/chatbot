@@ -20,7 +20,7 @@ const commonItems = [
   { id: 2, label: "シナリオ登録", isLarge: true, path: "/scenario-registration", component: "ScenarioRegistration", filter: "common" },
   { id: 3, label: "ログ管理", isLarge: true, path: "/log-management", filter: "common" },
   { id: 4, label: "学習ログ", isLarge: false, path: "/log-management/learning", component: "LogLearning", filter: "common" },
-  { id: 5, label: "会話ログ", isLarge: false, path: "/log-management/chat", component: "LogChat", filter: "common" },
+  { id: 5, label: "会話ログ", isLarge: false, path: "/chatLog", component: "ChatLog", filter: "common" },
   { id: 6, label: "フィードバックログ", isLarge: false, path: "/log-management/feedback", component: "LogFeedback", filter: "common" },
   { id: 7, label: "ユーザー管理", isLarge: true, path: "/user", component: "UserManagement", filter: "isAdmin" },
 ];

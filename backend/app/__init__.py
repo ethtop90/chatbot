@@ -24,6 +24,7 @@ CORS(app, resources={r"/learningData/*": {"origins": "*"}})
 CORS(app, resources={r"/learningLogs/*": {"origins": "*"}})
 CORS(app, resources={r"/chatbot/*": {"origins": "*"}})
 CORS(app, resources={r"/users/*": {"origins": "*"}})
+CORS(app, resources={r"/chatLog/*": {"origins": "*"}})
 
 from app.routes import *
 
@@ -32,3 +33,4 @@ app.register_blueprint(learningData_bp)
 app.register_blueprint(learningLog_bp)
 app.register_blueprint(chatbot_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(chatlog_bp)
