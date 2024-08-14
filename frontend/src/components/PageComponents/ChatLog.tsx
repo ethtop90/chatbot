@@ -7,11 +7,15 @@ import toast from "react-hot-toast";
 import Modal from "../modal/EditModal"; // Assume you create this modal component
 
 interface ChatLog {
-    id: string;
+    _id: string;
     date: string;
     user_email: string;
     question: string;
     answer: string;
+}
+
+interface ChatLogResponse {
+    chat_logs: ChatLog[];
 }
 
 const ChatLog: React.FC = () => {
@@ -30,12 +34,12 @@ const ChatLog: React.FC = () => {
                     Accept: "application/json"
                 },
             };
-            const response = await APIService.get<ChatLog[]>(
+            const response = await APIService.get<ChatLogResponse>(
                 "/chatLog/",
                 config
             );
-            const res = response.data
-            setData(res['chat_logs']);
+            const res: ChatLogResponse = response.data; // Explicitly type the response
+            setData(res.chat_logs);
             toast.success("操作は正常に続行されました");
             setLoading(false);
         } catch (err) {
@@ -47,7 +51,7 @@ const ChatLog: React.FC = () => {
     useEffect(() => {
         fetchData();
     }, []);
-    
+
     useEffect(() => {
     }, [data]);
 
@@ -73,7 +77,7 @@ const ChatLog: React.FC = () => {
                     },
                 };
                 await APIService.delete(`/chatLog/delete/${id}`, config);
-                setData((prevData) => prevData.filter((item) => item.id !== id));
+                setData((prevData) => prevData.filter((item) => item._id !== id));
                 fetchData();
                 toast.success("操作は正常に続行されました");
             } catch (err) {
