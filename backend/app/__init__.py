@@ -8,7 +8,7 @@ from flask_cors import CORS
 app = Flask(__name__, static_folder='../../frontend/dist', static_url_path='/')
 app.config.from_object('app.config')
 app.config["JWT_SECRET_KEY"] = "your_jwt_secret_key"
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)  # Set the token to expire in 1 day
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False # Set the token to expire in 1 day
 
 @app.errorhandler(404)
 def not_found(e):
