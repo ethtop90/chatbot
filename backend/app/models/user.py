@@ -102,7 +102,7 @@ class User:
         return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
 
     @staticmethod
-    def generate_code(email):
+    def generate_code(username, email):
         
         # Logic to send the code via email
         encrypted_email = encrypt_email(email)
@@ -182,7 +182,7 @@ class User:
             // Create the iframe
             var chatbotIframe = document.createElement('iframe');
             chatbotIframe.id = 'chatbotIframe';
-            chatbotIframe.src = 'https://perva-bot.com/chatbot?id={encrypted_email}';
+            chatbotIframe.src = 'https://perva-bot.com/chatbot?id={encrypted_email}&companyname={username}';
             var chatbotCloseButton = document.createElement('button');
             chatbotCloseButton.id = 'chatbotCloseButton';
             chatbotCloseButton.innerHTML = `<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

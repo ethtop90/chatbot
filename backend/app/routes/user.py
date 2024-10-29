@@ -99,8 +99,8 @@ def is_admin(email):
 def generate_code():
     data = request.get_json()
     email = data.get('email')
-
-    code = User.generate_code(email)
+    username = data.get('username')
+    code = User.generate_code(username, email)
     return jsonify({'code': code}), 200
 
     

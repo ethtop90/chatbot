@@ -16,7 +16,7 @@ const styles = {
 };
 
 const commonItems = [
-  { id: 1, label: "学習させる", isLarge: true, path: "/learning", filter: "common"},
+  { id: 1, label: "学習させる", isLarge: true, path: "/learning", filter: "common" },
   { id: 2, label: "シナリオ登録", isLarge: true, path: "/scenario-registration", component: "ScenarioRegistration", filter: "common" },
   { id: 3, label: "ログ管理", isLarge: true, path: "/log-management", filter: "common" },
   { id: 4, label: "学習ログ", isLarge: false, path: "/log-management/learning", component: "LogLearning", filter: "common" },
@@ -34,10 +34,10 @@ const Sidebar = ({ handleComponentSelect }: { handleComponentSelect: Function })
   const [current, setCurrent] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
-  const [navItemFilter, setNavItemFilter] = useState(""); 
+  const [navItemFilter, setNavItemFilter] = useState("");
 
   const renderNavItems = (Items: Array<{ id: number; label: string; isLarge: boolean; path: string; component?: string; filter: string; }>, filterString: string) => {
-    if(Items.length == 0) {
+    if (Items.length == 0) {
       return <></>;
     }
     return Items.filter((item) => item.filter === filterString).map((item) => (
@@ -143,11 +143,22 @@ const Sidebar = ({ handleComponentSelect }: { handleComponentSelect: Function })
   return (
     <div className="top-0 left-0 bottom-0 h-screen flex flex-col w-[230px] bg-[#202020] overflow-hidden">
       <div className="relative flex flex-col items-center w-full h-screen">
-        <div className="flex justify-center mt-12">
-          <img src={chatbot} alt="チャットボット" className="w-20 h-20 block !filter-none" />
+        <div className="flex justify-center mt-12 flex-col">
+          {/**<img src={chatbot} alt="チャットボット" className="w-20 h-20 block !filter-none" />**/}
+          <div className="h-20 flex justify-center">
+            <svg width="80" height="80" viewBox="0 0 38 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.147 0L0 7.95605L11.503 13.4103L18.147 10.4972V0Z" fill="#E6E6E6" />
+              <path d="M0 18.4227L18.0886 27V16.5387L0 7.96143V18.4227Z" fill="white" />
+              <path d="M19.3201 0V10.5006L25.9641 13.4136L37.4671 7.95944L19.3201 0Z" fill="#E6E6E6" />
+              <path d="M37.4664 7.96143V18.4227L19.3784 27V16.5387L37.4664 7.96143Z" fill="white" />
+            </svg>
+          </div>
         </div>
+        <h1 className="text-white font-bold">PERVA BOT</h1>
         <div className="flex flex-col items-center my-[20px]">
           <p className="text-base font-bold text-white">{auth?.userData?.username}</p>
+
+
         </div>
         <div className="flex flex-col items-center w-full mt-10 space-y-2">
           {renderNavItems(commonItems, navItemFilter)}

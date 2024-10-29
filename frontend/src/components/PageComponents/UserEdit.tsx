@@ -52,7 +52,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, setStatus, fetchUsers }) => {
 
     const handleGenerateCode = async () => {
         try {
-            const response = await APIService.post('/users/generateCode', { email }, config);
+            const response = await APIService.post('/users/generateCode', { username, email }, config);
             setCode(response.data.code);
             toast.success('コードが生成されました');
         } catch (err) {

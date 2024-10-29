@@ -1,0 +1,12 @@
+[0;1;32m●[0m mongod.service - MongoDB Database Server
+     Loaded: loaded (]8;;file://x162-43-27-183/usr/lib/systemd/system/mongod.service/usr/lib/systemd/system/mongod.service]8;;; [0;1;38;5;185mdisabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Tue 2024-07-30 21:25:09 JST; 3s ago
+       Docs: ]8;;https://docs.mongodb.org/manualhttps://docs.mongodb.org/manual]8;;
+   Main PID: 5516 (mongod)
+     Memory: 64.9M (peak: 65.4M)
+        CPU: 221ms
+     CGroup: /system.slice/mongod.service
+             └─[0;38;5;245m5516 /usr/bin/mongod --config /etc/mongod.conf[0m
+
+Jul 30 21:25:09 x162-43-27-183 systemd[1]: Started mongod.service - MongoDB Database Server.
+Jul 30 21:25:09 x162-43-27-183 mongod[5516]: {"t":{"$date":"2024-07-30T12:25:09.752Z"},"s":"I",  "c":"CONTROL",  "id":7484500, "ctx":"-","msg":"Environment variable MONGODB_CONFIG_OVERRIDE_NOFORK == 1, overriding \"processManagement.fork\" to false"}

@@ -18,6 +18,7 @@ interface ChatMessage {
 const Chatbot: React.FC = () => {
   const [searchParams] = useSearchParams();
   const chatbotID = searchParams.get('id');
+  const companyName = searchParams.get('companyname');
   const chatHistoryRef = useRef<HTMLDivElement>(null);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [chatHistories, setChatHistories] = useState<ChatMessage[]>([]);
@@ -32,7 +33,7 @@ const Chatbot: React.FC = () => {
       chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
     }
     console.log(chatHistories);
-  }, [chatHistories]);
+  }, [chatHistories, suggestQuestions]);
 
   const handleSendMessage = async (messageContent: string, role: 'user' | 'ai') => {
     const newMessage: ChatMessage = { role, content: messageContent };
@@ -202,7 +203,7 @@ const Chatbot: React.FC = () => {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-60">
         <div className="bg-white w-full h-full flex flex-col rounded-lg overflow-hidden shadow-lg">
           {/* Header */}
-          <div className="bg-[#2D2D2D] h-[71px] flex items-center p-6">
+          <div className="bg-[#2D2D2D] h-[71px] flex items-center p-6" id="chatbotWindowFrame" >
             <div className="flex items-center">
               <div className="p-3">
                 <svg width="38" height="27" viewBox="0 0 38 27" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -212,7 +213,7 @@ const Chatbot: React.FC = () => {
                   <path d="M37.9666 7.96143V18.4227L20.0234 27V16.5387L37.9666 7.96143Z" fill="white" />
                 </svg>
               </div>
-              <span className="ml-2 text-white font-TimeBurner">PERVA</span>
+              <span className="ml-2 text-white font-TimeBurner">{companyName}</span>
             </div>
           </div>
           {/* Keyword buttons */}
@@ -243,7 +244,7 @@ const Chatbot: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <div className="text-[14px] font-bold ">PERVA</div>
+                <div className="text-[14px] font-bold ">{companyName}</div>
                 {greetings && (
 
                   <div
@@ -300,7 +301,7 @@ const Chatbot: React.FC = () => {
                       {chat.content}
                     </div>
                   )}
-                  {chat.role === 'ai' && suggestQuestions && (
+                  {chat.role === 'ai' && suggestQuestions && index == (chatHistories.length - 1) && (
                     <div className="flex flex-row flex-wrap justify-start">
                       {suggestQuestions.map((question: string, qIndex: Key) => (
                         <button
@@ -419,9 +420,9 @@ const Chatbot: React.FC = () => {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.ctrlKey) { // Check for Enter key, but allow Ctrl + Enter for submission
+                  if (e.key === 'Enter' && !e.metaKey) { // Check for Enter key, but allow Ctrl + Enter for submission
                     // e.preventDefault(); // Prevent the default behavior of adding a new line
-                  } else if (e.key === 'Enter' && e.ctrlKey) {
+                  } else if (e.key === 'Enter' && e.metaKey) {
                     handleSubmit(e);
                   }
                 }}

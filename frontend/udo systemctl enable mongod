@@ -1,0 +1,13 @@
+[0;1;31m×[0m mongod.service - MongoDB Database Server
+     Loaded: loaded (]8;;file://x162-43-27-183/usr/lib/systemd/system/mongod.service/usr/lib/systemd/system/mongod.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Wed 2024-07-31 11:49:19 JST; 4s ago
+   Duration: 32ms
+       Docs: ]8;;https://docs.mongodb.org/manualhttps://docs.mongodb.org/manual]8;;
+    Process: 9250 ExecStart=/usr/bin/mongod --config /etc/mongod.conf [0;1;31m(code=exited, status=14)[0m
+   Main PID: 9250 (code=exited, status=14)
+        CPU: 31ms
+
+Jul 31 11:49:19 x162-43-27-183 systemd[1]: Started mongod.service - MongoDB Database Server.
+Jul 31 11:49:19 x162-43-27-183 mongod[9250]: {"t":{"$date":"2024-07-31T02:49:19.252Z"},"s":"I",  "c":"CONTROL",  "id":7484500, "ctx":"-","msg":"Environment variable MONGODB_CONFIG_OVERRIDE_NOFORK == 1, overriding \"processManagement.fork\" to false"}
+Jul 31 11:49:19 x162-43-27-183 systemd[1]: [0;1;39m[0;1;31m[0;1;39mmongod.service: Main process exited, code=exited, status=14/n/a[0m
+Jul 31 11:49:19 x162-43-27-183 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mmongod.service: Failed with result 'exit-code'.[0m
