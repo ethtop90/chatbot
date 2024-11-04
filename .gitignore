@@ -180,7 +180,7 @@ yarn.lock
 package-lock.json
 
 # backend
-backend/.venv
+backend/venv
 *.pyc
 backend/*/*.pyc
 backend/*.pem
